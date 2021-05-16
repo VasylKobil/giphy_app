@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Find GIF</h1>
-    <input type="text" placeholder="Write here..." v-model="input">
+    <input @keyup.enter="click" type="text" placeholder="Write here..." v-model="input">
     <button @click="click">Submit</button>
     <hr>
     <gifsBox
@@ -20,7 +20,6 @@
 import getData from '/src/services';
 import GifsBox from "./gifsBox";
 import Favorite from "./Favorite";
-// import {onMounted} from 'vue';
 
 export default {
   components: {Favorite, GifsBox},
@@ -33,8 +32,8 @@ export default {
   },
   methods: {
     async click(){
-      const promise = await getData.request(this.input);
-      this.$data.data = promise;
+      const data = await getData.request(this.input);
+      this.$data.data = data;
       this.input = '';
     },
     addItem(data){
@@ -47,15 +46,13 @@ export default {
       this.items = this.items.filter(t => t.id !== id)
     }
   },
-  // setup(){
-  //   onMounted(() => {
-  //     const savedData = localStorage.data ? JSON.parse(localStorage.data) : null;
-  //     this.items(savedData);
-  //     window.onbeforeunload = () => {
-  //       localStorage.data = JSON.stringify(this.items);
-  //       return "Are you sure you want to close the window?";
-  //     }
-  //   })
-  // }
+  mounted: function(){
+      const savedData = localStorage.data ? JSON.parse(localStorage.data) : [];
+      this.items = savedData;
+      window.onbeforeunload = () => {
+        localStorage.data = JSON.stringify(this.items);
+        return "Are you sure you want to close the window?";
+      }
+  }
 }
 </script>
