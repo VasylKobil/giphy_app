@@ -10,6 +10,7 @@
     />
     <Favorite
         v-bind:items="items"
+        v-on:deleteItem="deleteItem"
     />
   </div>
 
@@ -19,7 +20,7 @@
 import getData from '/src/services';
 import GifsBox from "./gifsBox";
 import Favorite from "./Favorite";
-import {onMounted} from 'vue';
+// import {onMounted} from 'vue';
 
 export default {
   components: {Favorite, GifsBox},
@@ -37,18 +38,24 @@ export default {
       this.input = '';
     },
     addItem(data){
+      if(this.items.includes(data)){
+        return
+      }
       this.items.push(data);
+    },
+    deleteItem(id){
+      this.items = this.items.filter(t => t.id !== id)
     }
   },
-  setup(){
-    onMounted(() => {
-      const savedData = localStorage.data ? JSON.parse(localStorage.data) : null;
-      this.items(savedData);
-      window.onbeforeunload = () => {
-        localStorage.data = JSON.stringify(this.items);
-        return "Are you sure you want to close the window?";
-      }
-    })
-  }
+  // setup(){
+  //   onMounted(() => {
+  //     const savedData = localStorage.data ? JSON.parse(localStorage.data) : null;
+  //     this.items(savedData);
+  //     window.onbeforeunload = () => {
+  //       localStorage.data = JSON.stringify(this.items);
+  //       return "Are you sure you want to close the window?";
+  //     }
+  //   })
+  // }
 }
 </script>
