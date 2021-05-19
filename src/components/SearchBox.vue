@@ -36,11 +36,12 @@ export default {
       this.$data.data = data;
       this.input = '';
     },
-    addItem(data){
-      if(this.items.includes(data)){
+    addItem(data) {
+      if (this.items.some(ele => ele.id === data.id)) {
         return
+      }else{
+        this.items.push(data);
       }
-      this.items.push(data);
     },
     deleteItem(id){
       this.items = this.items.filter(t => t.id !== id)
